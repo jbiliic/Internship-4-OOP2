@@ -60,9 +60,8 @@ namespace OOP2.Application.Users.User
 
             await _userRepository.InsertAsync(user);
             resault.setValue(new SuccessResponseId { Id = user.Id });
+
             return resault;
-
-
         }
     }
 }

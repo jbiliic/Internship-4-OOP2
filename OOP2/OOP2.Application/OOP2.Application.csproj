@@ -10,8 +10,4 @@
     <ProjectReference Include="..\OOP2.Domain\OOP2.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>

@@ -3,8 +3,10 @@
     public interface IRepository<TEntity, Tvalue> where TEntity : class
     {
         Task InsertAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
+        void UpdateAsync(TEntity entity);
         Task DeleteAsync(Tvalue id);
-        
+
+        Task<TEntity> GetByIdAsync(Tvalue id);
+
     }
 }
