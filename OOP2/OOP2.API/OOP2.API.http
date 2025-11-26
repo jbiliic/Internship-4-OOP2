@@ -1,0 +1,6 @@
+@OOP2.API_HostAddress = http://localhost:5182
+
+GET {{OOP2.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

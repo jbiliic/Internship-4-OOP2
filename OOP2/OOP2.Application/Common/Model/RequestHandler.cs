@@ -12,11 +12,14 @@
                 resault.setUnauthorized();
                 return resault;
             }
-            await HandleRequestAsync(request, resault);
+            await HandlePostRequestAsync(request, resault);
             return resault;
         }
 
-        protected abstract Task<Resault<TResault>> HandleRequestAsync(TRequest request, Resault<TResault> resault);
+        protected abstract Task<Resault<TResault>> HandlePostRequestAsync(TRequest request, Resault<TResault> resault);
+        protected abstract Task<Resault<TResault>> HandleGetRequestAsync(TRequest request, Resault<TResault> resault);
+        protected abstract Task<Resault<TResault>> HandlePutRequestAsync(TRequest request, Resault<TResault> resault);
+        protected abstract Task<Resault<TResault>> HandleDeleteRequestAsync(TRequest request, Resault<TResault> resault);
         protected abstract Task<bool> AuthorizeRequest(TRequest request);
     }
 }

@@ -9,7 +9,6 @@ namespace OOP2.Application.Users.User
         public string LastName { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
         public string? Website { get; set; }
         public string? AdressCity { get; set; }
         public string? AdressStreet { get; set; }
@@ -35,7 +34,17 @@ namespace OOP2.Application.Users.User
             return Task.FromResult(true);
         }
 
-        protected async override Task<Resault<SuccessResponseId>> HandleRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        protected override Task<Resault<SuccessResponseId>> HandleDeleteRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<Resault<SuccessResponseId>> HandleGetRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected async override Task<Resault<SuccessResponseId>> HandlePostRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
         {
             var user = new Domain.Entities.User.User
             {
@@ -43,9 +52,9 @@ namespace OOP2.Application.Users.User
                 LastName = request.LastName,
                 UserName = request.UserName,
                 Email = request.Email,
-                Password = request.Password,
                 Website = request.Website,
                 AdressCity = request.AdressCity,
+                Password = new Guid().ToString(),
                 AdressStreet = request.AdressStreet,
                 BirthDate = request.BirthDate,
                 CoordinateLng = request.CoordinateLng,
@@ -62,6 +71,11 @@ namespace OOP2.Application.Users.User
             resault.setValue(new SuccessResponseId { Id = user.Id });
 
             return resault;
+        }
+
+        protected override Task<Resault<SuccessResponseId>> HandlePutRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        {
+            throw new NotImplementedException();
         }
     }
 }
