@@ -8,5 +8,7 @@ namespace OOP2.Domain.Repository.User
         Task<bool> DeactivateAsync(int userId);
         Task<bool> EmailExistsAsync(string email);
         Task<bool> UserNameExistsAsync(string userName);
+        Task<IReadOnlyList<Entities.User.User>> GetAllUsersAsync();
+
     }
 }

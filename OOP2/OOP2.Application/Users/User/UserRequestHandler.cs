@@ -1,28 +1,15 @@
 ﻿using OOP2.Application.Common.Model;
+using OOP2.Domain.Entities.User;
 using OOP2.Domain.Repository.User;
 
 namespace OOP2.Application.Users.User
 {
-    public class CreateUserRequest
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string? Website { get; set; }
-        public string? AdressCity { get; set; }
-        public string? AdressStreet { get; set; }
-        public DateOnly? BirthDate { get; set; }
-        public float CoordinateLng { get; set; }
-        public float CoordinateLat { get; set; }
-        public bool IsActive { get; set; } = true;
-
-    }
-    internal class CreateUserRequestHandler : RequestHandler<CreateUserRequest, SuccessResponseId>
+    
+    public class UserRequestHandler : RequestHandler<CreateUserRequest, SuccessResponseId>
     {
         private readonly Domain.Services.UserDomainService _userDomainService;
         private readonly Domain.Repository.User.IUserRepository _userRepository;
-        public CreateUserRequestHandler(Domain.Services.UserDomainService userDomainService,IUserRepository userRepository)
+        public UserRequestHandler(Domain.Services.UserDomainService userDomainService,IUserRepository userRepository)
         {
             _userDomainService = userDomainService;
             _userRepository = userRepository;
@@ -54,11 +41,13 @@ namespace OOP2.Application.Users.User
                 Email = request.Email,
                 Website = request.Website,
                 AdressCity = request.AdressCity,
-                Password = new Guid().ToString(),
+                Password = Guid.NewGuid().ToString(),
                 AdressStreet = request.AdressStreet,
                 BirthDate = request.BirthDate,
                 CoordinateLng = request.CoordinateLng,
                 CoordinateLat = request.CoordinateLat,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
                 IsActive = request.IsActive
             };
             var validationResault = await _userDomainService.ValidateUserAsync(user);
@@ -72,8 +61,34 @@ namespace OOP2.Application.Users.User
 
             return resault;
         }
+        public async Task<Resault<SuccessResponseId>> ExecutePostAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<SuccessResponseId>();
+            return await HandlePostRequestAsync(request, resault);
+        }
 
         protected override Task<Resault<SuccessResponseId>> HandlePutRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected async Task<Resault<GetAllResponse<Domain.Entities.User.User>>> HandleGetallRequestAsync(CreateUserRequest request, Resault<GetAllResponse<Domain.Entities.User.User>> resault)
+        {
+            var value = await _userRepository.GetAllUsersAsync();
+            if (value == null)
+            {
+                return resault;
+            }
+            resault.setValue(new GetAllResponse<Domain.Entities.User.User> (value.ToList()));
+            return resault;
+        }
+        public async Task<Resault<GetAllResponse<Domain.Entities.User.User>>> ExecuteGetAllAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<GetAllResponse<Domain.Entities.User.User>>();
+            return await HandleGetallRequestAsync(request, resault);
+        }
+
+        protected override Task<Resault<SuccessResponseId>> HandleGetAllRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
         {
             throw new NotImplementedException();
         }

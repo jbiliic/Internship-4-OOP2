@@ -4,10 +4,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3651b9b9-b953-491e-9bce-ee43a386d5fb</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OOP2.Application\OOP2.Application.csproj" />
+    <ProjectReference Include="..\OOP2.Infrastructure\OOP2.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

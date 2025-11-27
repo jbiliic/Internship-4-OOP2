@@ -23,7 +23,7 @@ namespace OOP2.Domain.Entities.User
         public string? Website { get; set; }
         public string? AdressCity { get; set; }
         public string? AdressStreet { get; set; }
-        public DateOnly? BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public float CoordinateLng { get; set; }
         public float CoordinateLat { get; set; }
         public bool IsActive { get; set; } = true;
@@ -49,7 +49,7 @@ namespace OOP2.Domain.Entities.User
 
             if (BirthDate != null)
             {
-                var today = DateOnly.FromDateTime(DateTime.Now);
+                var today = DateTime.Now;
 
                 if (BirthDate > today || BirthDate < today.AddYears(-100))
                     validationResault.AddValidationItem(

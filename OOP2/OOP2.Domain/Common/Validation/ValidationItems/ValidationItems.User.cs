@@ -83,7 +83,7 @@ namespace OOP2.Domain.Common.Validation.ValidationItems
             public static readonly ValidationItem NotWithin3KmOfSplit = new ValidationItem
             {
                 Code = $"{CodePrefix}11",
-                Message = $"Korisnik je pre daleko",
+                Message = $"Korisnik je udaljeniji od 3km ",
                 Severity = ValidationSeverity.Warning,
                 Type = ValidationType.Security
             };

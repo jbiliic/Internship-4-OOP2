@@ -15,7 +15,7 @@ namespace OOP2.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CompanyDbContext).Assembly);
             modelBuilder.HasDefaultSchema("public");
         }
     }

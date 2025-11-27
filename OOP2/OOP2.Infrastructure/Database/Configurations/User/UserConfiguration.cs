@@ -35,10 +35,10 @@ namespace OOP2.Infrastructure.Database.Configurations.User
                 .IsRequired();
 
             builder.Property(u => u.AdressCity)
-                .HasColumnName("adress_city");
+                .HasColumnName("address_city");
 
             builder.Property(u => u.AdressStreet)
-                .HasColumnName("adress_street");
+                .HasColumnName("address_street");
 
             builder.Property(u => u.CoordinateLat)
                 .HasColumnName("geo_lat")

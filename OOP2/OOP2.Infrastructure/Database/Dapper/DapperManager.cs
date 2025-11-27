@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace OOP2.Infrastructure.Database.Dapper
@@ -6,10 +7,11 @@ namespace OOP2.Infrastructure.Database.Dapper
     public class DapperManager : IDapperManager
     {
         private readonly string _connectionString;
+        public string ConnectionString => _connectionString;
 
-        public DapperManager(string connectionString)
+        public DapperManager(IConfiguration config)
         {
-            _connectionString = connectionString;
+            _connectionString = config.GetConnectionString("UserDb"); 
         }
 
         private NpgsqlConnection CreateConnection()

@@ -18,6 +18,7 @@
 
         protected abstract Task<Resault<TResault>> HandlePostRequestAsync(TRequest request, Resault<TResault> resault);
         protected abstract Task<Resault<TResault>> HandleGetRequestAsync(TRequest request, Resault<TResault> resault);
+        protected abstract Task<Resault<TResault>> HandleGetAllRequestAsync(TRequest request, Resault<TResault> resault);
         protected abstract Task<Resault<TResault>> HandlePutRequestAsync(TRequest request, Resault<TResault> resault);
         protected abstract Task<Resault<TResault>> HandleDeleteRequestAsync(TRequest request, Resault<TResault> resault);
         protected abstract Task<bool> AuthorizeRequest(TRequest request);
