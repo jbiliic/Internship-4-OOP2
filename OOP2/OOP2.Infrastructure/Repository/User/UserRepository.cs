@@ -53,9 +53,29 @@ namespace OOP2.Infrastructure.Repository.User
             return count > 0;
         }
 
-        Task<Domain.Entities.User.User> IRepository<Domain.Entities.User.User, int>.GetByIdAsync(int id)
+        public override async Task<Domain.Entities.User.User> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var sql = @"
+        SELECT 
+            id,
+            username AS ""UserName"",
+            name AS ""FirstName"",
+            last_name AS ""LastName"",
+            email AS ""Email"",
+            website AS ""Website"",
+            address_city AS ""AdressCity"",
+            address_street AS ""AdressStreet"",
+            birth_date AS ""BirthDate"",
+            geo_lng AS ""CoordinateLng"",
+            geo_lat AS ""CoordinateLat"",
+            is_active AS ""IsActive"",
+            created_at AS ""CreatedAt"",
+            updated_at AS ""UpdatedAt"",
+            password AS ""Password""
+        FROM users
+        WHERE id = @Id;
+    ";
+            return await _manager.QueryFirstOrDefaultAsync<Domain.Entities.User.User>(sql, new { Id = id });
         }
 
         public async Task<IReadOnlyList<Domain.Entities.User.User>> GetAllUsersAsync()

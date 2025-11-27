@@ -26,23 +26,30 @@ namespace OOP2.API.Controllers
             return Ok(res);
         }
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetUserById(int id)
-        //{
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById([FromRoute] int  id)
+        {
+            var res = await _handler.ExecuteGetAsync(new CreateUserRequest { Id = id });
 
-        //}
-        [HttpPost]
+            
+            if (res.Value == null || res.hasErrors)
+                return BadRequest(res);
+
+            return Ok(res);
+
+        }
+        [HttpPost] 
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest userRequest)
         {
-            var response = await _handler.ExecutePostAsync(userRequest);
+            var res = await _handler.ExecutePostAsync(userRequest);
 
-            if (response.hasErrors)
-                return BadRequest(response);
+            if (res.hasErrors)
+                return BadRequest(res);
 
-            if (!response.IsAuthorized)
-                return Unauthorized(response);
+            if (!res.IsAuthorized)
+                return Unauthorized(res);
 
-            return Ok(response);
+            return Ok(res);
         }
     }
 }

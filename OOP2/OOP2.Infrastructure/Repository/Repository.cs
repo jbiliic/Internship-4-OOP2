@@ -22,7 +22,7 @@ namespace OOP2.Infrastructure.Repository
             }
         }
 
-        public async Task<TEntity> GetByIdAsync(TId id)
+        public virtual async Task<TEntity> GetByIdAsync(TId id)
         {
             var entity = await _dbSet.FindAsync(id);
              

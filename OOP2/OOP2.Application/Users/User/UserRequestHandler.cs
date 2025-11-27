@@ -5,7 +5,7 @@ using OOP2.Domain.Repository.User;
 namespace OOP2.Application.Users.User
 {
     
-    public class UserRequestHandler : RequestHandler<CreateUserRequest, SuccessResponseId>
+    public class UserRequestHandler : RequestHandler<CreateUserRequest, SuccessResponse<Domain.Entities.User.User>>
     {
         private readonly Domain.Services.UserDomainService _userDomainService;
         private readonly Domain.Repository.User.IUserRepository _userRepository;
@@ -21,17 +21,30 @@ namespace OOP2.Application.Users.User
             return Task.FromResult(true);
         }
 
-        protected override Task<Resault<SuccessResponseId>> HandleDeleteRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        protected override Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleDeleteRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
         {
             throw new NotImplementedException();
         }
 
-        protected override Task<Resault<SuccessResponseId>> HandleGetRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        protected override async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleGetRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
         {
-            throw new NotImplementedException();
+            var id = request.Id;
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = false }); 
+                return resault;
+            }
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = user , IsSuccess = true });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> ExecuteGetAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
+            return await HandleGetRequestAsync(request, resault);
         }
 
-        protected async override Task<Resault<SuccessResponseId>> HandlePostRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        protected async override Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandlePostRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
         {
             var user = new Domain.Entities.User.User
             {
@@ -57,17 +70,17 @@ namespace OOP2.Application.Users.User
                 return resault;
 
             await _userRepository.InsertAsync(user);
-            resault.setValue(new SuccessResponseId { Id = user.Id });
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Id = user.Id });
 
             return resault;
         }
-        public async Task<Resault<SuccessResponseId>> ExecutePostAsync(CreateUserRequest request)
+        public async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> ExecutePostAsync(CreateUserRequest request)
         {
-            var resault = new Resault<SuccessResponseId>();
+            var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
             return await HandlePostRequestAsync(request, resault);
         }
 
-        protected override Task<Resault<SuccessResponseId>> HandlePutRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
+        protected override Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandlePutRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
         {
             throw new NotImplementedException();
         }
@@ -86,11 +99,6 @@ namespace OOP2.Application.Users.User
         {
             var resault = new Resault<GetAllResponse<Domain.Entities.User.User>>();
             return await HandleGetallRequestAsync(request, resault);
-        }
-
-        protected override Task<Resault<SuccessResponseId>> HandleGetAllRequestAsync(CreateUserRequest request, Resault<SuccessResponseId> resault)
-        {
-            throw new NotImplementedException();
         }
     }
 }
