@@ -13,13 +13,10 @@ namespace OOP2.Infrastructure.Repository
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-        public async Task DeleteAsync(TId id)
+        public async Task DeleteAsync(TEntity entity)
         {
-            var enitiy = await _dbSet.FindAsync(id);
-            if (enitiy != null)
-            {
-                _dbSet.Remove(enitiy);
-            }
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
         }
 
         public virtual async Task<TEntity> GetByIdAsync(TId id)

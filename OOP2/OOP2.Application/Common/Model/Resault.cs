@@ -10,7 +10,6 @@ namespace OOP2.Application.Common.Model
 
         public TValue? Value { get; set; }
         public Guid ReqId { get; init; } = Guid.NewGuid();
-        public bool IsAuthorized { get; set; }
 
         public IReadOnlyList<ValidationResaultItem> Infos
         {
@@ -47,11 +46,6 @@ namespace OOP2.Application.Common.Model
             _errors.AddRange(validationResault.ValidationItems
                 .Where(vi => vi.Severity == ValidationSeverity.Error)
                 .Select(ValidationResaultItem.FromValidationItem));
-        }
-        public void setUnauthorized()
-        {
-            IsAuthorized = false;
-            Value = null;
         }
     }
 }

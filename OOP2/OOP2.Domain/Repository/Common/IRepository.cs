@@ -4,7 +4,7 @@
     {
         Task InsertAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
-        Task DeleteAsync(Tvalue id);
+        Task DeleteAsync(TEntity id);
 
         Task<TEntity> GetByIdAsync(Tvalue id);
 

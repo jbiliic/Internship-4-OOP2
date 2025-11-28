@@ -46,9 +46,6 @@ namespace OOP2.API.Controllers
             if (res.hasErrors)
                 return BadRequest(res);
 
-            if (!res.IsAuthorized)
-                return Unauthorized(res);
-
             return Ok(res);
         }
 
@@ -61,9 +58,33 @@ namespace OOP2.API.Controllers
             if (res.hasErrors)
                 return BadRequest(res);
 
-            if (!res.IsAuthorized)
-                return Unauthorized(res);
+            return Ok(res);
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        {
+            var res = await _handler.ExecuteDeleteAsync( new CreateUserRequest() { Id = id });
+            if (res.Value.IsSuccess == false)
+                return BadRequest(res);
+            return Ok(res);
+        }
+
+        [HttpPut("activate/{id}")]
+        public async Task<IActionResult> ActivateUser([FromRoute] int id)
+        {
+            var res = await _handler.ExecuteActivationAsync(new CreateUserRequest() {Id = id });
+            if(res.Value.IsSuccess == false)
+                return BadRequest(res);
+            return Ok(res);
+        }
+
+        [HttpPut("deactivate/{id}")]
+        public async Task<IActionResult> DeactivateUser([FromRoute] int id)
+        {
+            var res = await _handler.ExecuteDeactivationAsync(new CreateUserRequest() { Id = id });
+            if (res.Value.IsSuccess == false)
+                return BadRequest(res);
             return Ok(res);
         }
     }

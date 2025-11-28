@@ -15,12 +15,6 @@ namespace OOP2.Application.Users.User
             _userRepository = userRepository;
         }
 
-
-        protected override Task<bool> AuthorizeRequest(CreateUserRequest request)
-        {
-            return Task.FromResult(true);
-        }
-
         protected override Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleDeleteRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
         {
             throw new NotImplementedException();
@@ -136,6 +130,79 @@ namespace OOP2.Application.Users.User
         {
             var resault = new Resault<GetAllResponse<Domain.Entities.User.User>>();
             return await HandleGetallRequestAsync(request, resault);
+        }
+        protected async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleActivationRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
+        {
+            var id = request.Id;
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = false });
+                return resault;
+            }
+            user.IsActive = true;
+            user.UpdatedAt = DateTime.UtcNow;
+            user.CreatedAt = DateTime.SpecifyKind(user.CreatedAt, DateTimeKind.Utc);
+            user.BirthDate = user.BirthDate.HasValue
+                    ? DateTime.SpecifyKind(user.BirthDate.Value, DateTimeKind.Utc)
+                    : null;
+
+            await _userRepository.UpdateAsync(user);
+
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = true, Id = id });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> ExecuteActivationAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
+            return await HandleActivationRequestAsync(request, resault);
+        }
+
+        protected async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleDeactivationRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
+        {
+            var id = request.Id;
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = false });
+                return resault;
+            }
+            user.IsActive = false;
+            user.UpdatedAt = DateTime.UtcNow;
+            user.CreatedAt = DateTime.SpecifyKind(user.CreatedAt, DateTimeKind.Utc);
+            user.BirthDate = user.BirthDate.HasValue
+                    ? DateTime.SpecifyKind(user.BirthDate.Value, DateTimeKind.Utc)
+                    : null;
+
+            await _userRepository.UpdateAsync(user);
+
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = true, Id = id });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> ExecuteDeactivationAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
+            return await HandleDeactivationRequestAsync(request, resault);
+        }
+        protected async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleDeleteAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
+        {
+            var id = request.Id;
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = false });
+                return resault;
+            }
+             await _userRepository.DeleteAsync(user);
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = true, Id = id });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> ExecuteDeleteAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
+            return await HandleDeleteAsync(request, resault);
         }
     }
 }
