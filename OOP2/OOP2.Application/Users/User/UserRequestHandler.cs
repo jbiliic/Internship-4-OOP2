@@ -80,9 +80,46 @@ namespace OOP2.Application.Users.User
             return await HandlePostRequestAsync(request, resault);
         }
 
-        protected override Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandlePutRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
+        protected override async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandlePutRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
         {
-            throw new NotImplementedException();
+            var id = request.Id;
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = false });
+                return resault;
+            }
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.UserName = request.UserName;
+            user.Email = request.Email;
+            user.Website = request.Website;
+            user.AdressCity = request.AdressCity;
+            user.AdressStreet = request.AdressStreet;
+            user.CoordinateLat = request.CoordinateLat;
+            user.CoordinateLng = request.CoordinateLng;
+            user.IsActive = request.IsActive;
+            user.UpdatedAt = DateTime.UtcNow;
+            user.CreatedAt = DateTime.SpecifyKind(user.CreatedAt, DateTimeKind.Utc);
+            user.BirthDate = request.BirthDate.HasValue
+                    ? DateTime.SpecifyKind(request.BirthDate.Value, DateTimeKind.Utc)
+                    : null;
+            var validationResault = await _userDomainService.ValidateUserAsync(user);
+            resault.setValidationResault(validationResault);
+
+            if (resault.hasErrors)
+                return resault;
+
+            await _userRepository.UpdateAsync(user);
+
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = true, Id = id });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> ExecutePutAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
+            return await HandlePutRequestAsync(request, resault);
         }
 
         protected async Task<Resault<GetAllResponse<Domain.Entities.User.User>>> HandleGetallRequestAsync(CreateUserRequest request, Resault<GetAllResponse<Domain.Entities.User.User>> resault)

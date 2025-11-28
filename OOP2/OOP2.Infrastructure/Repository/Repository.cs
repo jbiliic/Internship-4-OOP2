@@ -35,9 +35,22 @@ namespace OOP2.Infrastructure.Repository
             await _context.SaveChangesAsync();
         }
 
-        public void UpdateAsync(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
+            var entry = _context.Entry(entity);
+
+            foreach (var prop in entry.Properties)
+            {
+                if (prop.Metadata.ClrType == typeof(DateTime) && prop.CurrentValue is DateTime dt)
+                {
+                    if (dt.Kind == DateTimeKind.Unspecified)
+                        prop.CurrentValue = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                    if (dt.Kind == DateTimeKind.Local)
+                        prop.CurrentValue = dt.ToUniversalTime();
+                }
+            }
             _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

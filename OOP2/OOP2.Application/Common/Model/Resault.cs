@@ -9,7 +9,7 @@ namespace OOP2.Application.Common.Model
         private List<ValidationResaultItem> _errors = new List<ValidationResaultItem>();
 
         public TValue? Value { get; set; }
-        public Guid ReqId { get; init; }
+        public Guid ReqId { get; init; } = Guid.NewGuid();
         public bool IsAuthorized { get; set; }
 
         public IReadOnlyList<ValidationResaultItem> Infos

@@ -49,7 +49,7 @@ namespace OOP2.Domain.Entities.User
 
             if (BirthDate != null)
             {
-                var today = DateTime.Now;
+                var today = DateTime.UtcNow;
 
                 if (BirthDate > today || BirthDate < today.AddYears(-100))
                     validationResault.AddValidationItem(

@@ -51,5 +51,20 @@ namespace OOP2.API.Controllers
 
             return Ok(res);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditUser([FromRoute] int id , [FromBody] CreateUserRequest userRequest)
+        {
+            userRequest.Id = id;
+            var res = await _handler.ExecutePutAsync(userRequest);
+
+            if (res.hasErrors)
+                return BadRequest(res);
+
+            if (!res.IsAuthorized)
+                return Unauthorized(res);
+
+            return Ok(res);
+        }
     }
 }
