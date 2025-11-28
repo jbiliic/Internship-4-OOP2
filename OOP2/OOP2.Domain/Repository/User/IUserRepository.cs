@@ -9,6 +9,6 @@ namespace OOP2.Domain.Repository.User
         Task<bool> EmailExistsAsync(string email);
         Task<bool> UserNameExistsAsync(string userName);
         Task<IReadOnlyList<Entities.User.User>> GetAllUsersAsync();
-
+        Task<List<Domain.Entities.User.User>?> GetExternalUsersAsync();
     }
 }

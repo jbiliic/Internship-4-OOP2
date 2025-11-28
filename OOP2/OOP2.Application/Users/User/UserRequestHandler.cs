@@ -1,7 +1,7 @@
 ﻿using OOP2.Application.Common.Model;
 using OOP2.Domain.Entities.User;
 using OOP2.Domain.Repository.User;
-
+using OOP2.Domain.Services.Cache;
 namespace OOP2.Application.Users.User
 {
     
@@ -9,10 +9,13 @@ namespace OOP2.Application.Users.User
     {
         private readonly Domain.Services.UserDomainService _userDomainService;
         private readonly Domain.Repository.User.IUserRepository _userRepository;
-        public UserRequestHandler(Domain.Services.UserDomainService userDomainService,IUserRepository userRepository)
+        private readonly IUserCacheService _cacheService;
+
+        public UserRequestHandler(Domain.Services.UserDomainService userDomainService,IUserRepository userRepository, IUserCacheService userCacheService)
         {
             _userDomainService = userDomainService;
             _userRepository = userRepository;
+            _cacheService = userCacheService;
         }
 
         protected override Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleDeleteRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
@@ -203,6 +206,34 @@ namespace OOP2.Application.Users.User
         {
             var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
             return await HandleDeleteAsync(request, resault);
+        }
+
+        protected async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleImportAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
+        {
+            var users = await _userRepository.GetExternalUsersAsync();
+            if (users == null || users.Count == 0)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = false });
+                return resault;
+            }
+            foreach (var user in users)
+            { 
+                var validationResault = await _userDomainService.ValidateUserAsync(user);
+                resault.setValidationResault(validationResault);
+                if (resault.hasErrors)
+                    continue;
+                
+                await _userRepository.InsertAsync(user);
+                var cacheKey = $"external_user_{user.Id}";
+                _cacheService.Set(cacheKey, user);
+            }
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = true });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> ExecuteImportAsync(CreateUserRequest request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.User.User>>();
+            return await HandleImportAsync(request, resault);
         }
     }
 }

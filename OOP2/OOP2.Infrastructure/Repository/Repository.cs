@@ -8,10 +8,12 @@ namespace OOP2.Infrastructure.Repository
     {
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
-        public Repository(DbContext context )
+        private readonly HttpClient _httpClient;
+        public Repository(DbContext context, HttpClient client )
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
+            _httpClient = client;
         }
         public async Task DeleteAsync(TEntity entity)
         {

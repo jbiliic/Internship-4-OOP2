@@ -37,7 +37,7 @@ namespace OOP2.Domain.Entities.User
                     ValidationItems.User.FirstNameLen
                 );
 
-            if (LastName.Length > MaxNameLength || string.IsNullOrWhiteSpace(LastName))
+            if (LastName == null || LastName.Length > MaxNameLength || string.IsNullOrWhiteSpace(LastName) )
                 validationResault.AddValidationItem(
                     ValidationItems.User.LastNameLen
                 );

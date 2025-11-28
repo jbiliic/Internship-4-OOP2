@@ -87,5 +87,13 @@ namespace OOP2.API.Controllers
                 return BadRequest(res);
             return Ok(res);
         }
+        [HttpPost("import")]
+        public async Task<IActionResult> ImportUser()
+        {
+            var res = await _handler.ExecuteImportAsync(new CreateUserRequest() { });
+            if (res.Value.IsSuccess == false)
+                return BadRequest(res);
+            return Ok(res);
+        }
     }
 }
