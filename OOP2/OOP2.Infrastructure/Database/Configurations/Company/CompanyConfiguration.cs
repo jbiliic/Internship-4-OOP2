@@ -7,14 +7,20 @@ namespace OOP2.Infrastructure.Database.Configurations.Company
     {
         public void Configure(EntityTypeBuilder<Domain.Entities.Company.Company> builder)
         {
-            builder.ToTable("company");
+            builder.ToTable("companies");
 
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id)
                 .HasColumnName("id");
 
             builder.Property(c => c.Name)
-                .HasColumnName("name");       
+                .HasColumnName("name");  
+            
+            builder.Property(c => c.CreatedAt)
+                .HasColumnName("created_at");
+
+            builder.Property(c => c.UpdatedAt)
+                .HasColumnName("updated_at");
         }
     }
 }

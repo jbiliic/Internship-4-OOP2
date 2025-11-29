@@ -224,7 +224,7 @@ namespace OOP2.Application.Users.User
                     continue;
                 
                 await _userRepository.InsertAsync(user);
-                var cacheKey = $"external_user_{user.Id}";
+                var cacheKey = $"db_user_{user.Id}";
                 _cacheService.Set(cacheKey, user);
             }
             resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = true });

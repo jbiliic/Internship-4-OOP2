@@ -13,28 +13,45 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
-// ? ovo fali
 builder.Services.AddScoped<IUserCacheService, UserCacheService>();
 
 builder.Services.AddDbContext<UserDbContext>(o =>
     o.UseNpgsql(builder.Configuration.GetConnectionString("UserDb")));
+builder.Services.AddDbContext<CompanyDbContext>(o =>
+    o.UseNpgsql(builder.Configuration.GetConnectionString("UserDb")));
 
 builder.Services.AddScoped<UserDomainService>();
+builder.Services.AddScoped<OOP2.Domain.Services.CompanyDomainService>();
 
-// ? registriramo konkretan handler (Clean Architecture friendly)
+builder.Services.AddScoped<OOP2.Domain.Repository.Company.ICompanyRepository, OOP2.Infrastructure.Repository.Company.CompanyRepository>();
+
+
+
 builder.Services.AddScoped<OOP2.Application.Users.User.UserRequestHandler>();
+builder.Services.AddScoped<OOP2.Application.Companys.Company.CompanyReqHandler>();
+
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDapperManager, DapperManager>();
-
-// ? ovo ti NE treba posebno jer je veæ registriran preko IDapperManager
-// builder.Services.AddScoped<DapperManager>(); (možeš obrisati ako želiš minimalno)
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+app.UseCors("AllowAll");
+
+
 
 if (app.Environment.IsDevelopment())
 {
