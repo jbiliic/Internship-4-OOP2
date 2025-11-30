@@ -5,5 +5,6 @@ namespace OOP2.Domain.Repository.Company
     public interface ICompanyRepository : IRepository<Entities.Company.Company, int>
     {
         Task<bool> CompanyNameExistsAsync(string name);
+        Task<IReadOnlyList<Domain.Entities.Company.Company>> GetAllCompaniesAsync();
     }
 }

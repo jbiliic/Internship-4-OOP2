@@ -29,9 +29,25 @@ namespace OOP2.Application.Companys.Company
             throw new NotImplementedException();
         }
 
-        protected override Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> HandleGetRequestAsync(CreateCompanyReq request, Resault<SuccessResponse<Domain.Entities.Company.Company>> resault)
+        protected override async Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> HandleGetRequestAsync(CreateCompanyReq request, Resault<SuccessResponse<Domain.Entities.Company.Company>> resault)
         {
-            throw new NotImplementedException();
+            if (!request.Id.HasValue)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.Company.Company>() { Value = null, IsSuccess = false });
+                return resault;
+            }
+            var company = await _companyRepository.GetByIdAsync(request.Id.Value);
+            if (company == null) { 
+                resault.setValue(new SuccessResponse<Domain.Entities.Company.Company>() { Value = null, IsSuccess = false });
+                return resault;
+            }
+            resault.setValue(new SuccessResponse<Domain.Entities.Company.Company>() { Id = company.Id, Value = company, IsSuccess = true });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> ExecuteGetAsync(CreateCompanyReq request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.Company.Company>>();
+            return await HandleGetRequestAsync(request, resault);
         }
 
         protected override async Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> HandlePostRequestAsync(CreateCompanyReq request, Resault<SuccessResponse<Domain.Entities.Company.Company>> resault)
@@ -84,6 +100,24 @@ namespace OOP2.Application.Companys.Company
         {
             var resault = new Resault<SuccessResponse<Domain.Entities.Company.Company>>();
             return await HandlePutRequestAsync(request, resault);
+        }
+
+        protected async Task<Resault<GetAllResponse<Domain.Entities.Company.Company>>> HandleGetAllRequestAsync(CreateCompanyReq request, Resault<GetAllResponse<Domain.Entities.Company.Company>> resault)
+        {
+            
+            var companys = await _companyRepository.GetAllCompaniesAsync();
+            if (companys == null)
+            {
+                resault.setValue(new GetAllResponse<Domain.Entities.Company.Company>() { Items = companys});
+                return resault;
+            }
+            resault.setValue(new GetAllResponse<Domain.Entities.Company.Company>() { Items = companys });
+            return resault;
+        }
+        public async Task<Resault<GetAllResponse<Domain.Entities.Company.Company>>> ExecuteGetAllAsync(CreateCompanyReq request)
+        {
+            var resault = new Resault<GetAllResponse<Domain.Entities.Company.Company>>();
+            return await HandleGetAllRequestAsync(request, resault);
         }
     }
 }

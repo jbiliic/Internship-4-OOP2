@@ -31,5 +31,10 @@ namespace OOP2.Infrastructure.Repository.Company
             var sql = "SELECT * FROM companies WHERE id = @Id";
             return await _manager.QueryFirstOrDefaultAsync<Domain.Entities.Company.Company>(sql, new { Id = id });
         }
+        public async Task<IReadOnlyList<Domain.Entities.Company.Company>> GetAllCompaniesAsync()
+        {
+            var sql = "SELECT * FROM companies";
+            return await _manager.QueryGetAllAsync<Domain.Entities.Company.Company>(sql);
+        }
     }
 }

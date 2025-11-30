@@ -33,7 +33,8 @@ builder.Services.AddScoped<OOP2.Application.Companys.Company.CompanyReqHandler>(
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDapperManager, DapperManager>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<OOP2.Application.Common.Auth.AuthReqHandler>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
