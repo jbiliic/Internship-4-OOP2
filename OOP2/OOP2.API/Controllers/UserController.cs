@@ -23,7 +23,7 @@ namespace OOP2.API.Controllers
             var res = await _handler.ExecuteGetAllAsync(new CreateUserRequest());
             if (res.Value == null)
                 return BadRequest(res);
-            return Ok(res);
+            return Ok(res.Value);
         }
 
         [HttpGet("{id}")]
@@ -35,7 +35,7 @@ namespace OOP2.API.Controllers
             if (res.Value == null || res.hasErrors)
                 return BadRequest(res);
 
-            return Ok(res);
+            return Ok(res.Value);
 
         }
         [HttpPost] 

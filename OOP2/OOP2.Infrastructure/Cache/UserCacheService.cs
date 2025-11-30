@@ -17,7 +17,9 @@ namespace OOP2.Infrastructure.Cache
 
         public User? Get(string key)
         {
-            return _cache.TryGetValue(key, out User users) ? users : null;
+            var hit = _cache.TryGetValue(key, out User user);
+            Console.WriteLine(hit ? $"Cache HIT → {key}" : $"Cache MISS → {key}");
+            return hit ? user : null;
         }
         public void Set(string key , User users)
         {
@@ -26,6 +28,7 @@ namespace OOP2.Infrastructure.Cache
             var duration = endOfDay - now;
 
             _cache.Set(key, users, duration);
+            Console.WriteLine($"Cache saved user {key} until end of day");
         }
     }
 }

@@ -73,5 +73,22 @@ namespace OOP2.API.Controllers
             return Ok(res);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCompanyById([FromRoute] int id, [FromQuery] string username, [FromQuery] string password)
+        {
+            var authReq = new CreateAuthReq { Username = username, Password = password };
+            var resAuth = await _handlerAuth.ExecuteAuthAsync(authReq);
+            if (resAuth.Value.IsSuccess == false)
+            {
+                return BadRequest(resAuth);
+            }
+            var companyReq = new CreateCompanyReq { Id = id };
+            var res = await _handler.ExecuteDeleteAsync(companyReq);
+            if (res.Value.IsSuccess == false)
+            {
+                return BadRequest(res);
+            }
+            return Ok(res);
+        }
     }
 }

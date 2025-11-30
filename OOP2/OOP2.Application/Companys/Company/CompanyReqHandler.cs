@@ -24,9 +24,23 @@ namespace OOP2.Application.Companys.Company
             _companyRepository = companyRepository;
             _cacheService = userCacheService;
         }
-        protected override Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> HandleDeleteRequestAsync(CreateCompanyReq request, Resault<SuccessResponse<Domain.Entities.Company.Company>> resault)
+        protected override async Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> HandleDeleteRequestAsync(CreateCompanyReq request, Resault<SuccessResponse<Domain.Entities.Company.Company>> resault)
         {
-            throw new NotImplementedException();
+            var id = request.Id;
+            var company =  await _companyRepository.GetByIdAsync(id.Value);
+            if (company == null)
+            {
+                resault.setValue(new SuccessResponse<Domain.Entities.Company.Company>() { Value = null, IsSuccess = false });
+                return resault;
+            }
+            await _companyRepository.DeleteAsync(company);
+            resault.setValue(new SuccessResponse<Domain.Entities.Company.Company>() { Id = company.Id, Value = null, IsSuccess = true });
+            return resault;
+        }
+        public async Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> ExecuteDeleteAsync(CreateCompanyReq request)
+        {
+            var resault = new Resault<SuccessResponse<Domain.Entities.Company.Company>>();
+            return await HandleDeleteRequestAsync(request, resault);
         }
 
         protected override async Task<Resault<SuccessResponse<Domain.Entities.Company.Company>>> HandleGetRequestAsync(CreateCompanyReq request, Resault<SuccessResponse<Domain.Entities.Company.Company>> resault)

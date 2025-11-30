@@ -26,7 +26,15 @@ namespace OOP2.Application.Users.User
         protected override async Task<Resault<SuccessResponse<Domain.Entities.User.User>>> HandleGetRequestAsync(CreateUserRequest request, Resault<SuccessResponse<Domain.Entities.User.User>> resault)
         {
             var id = request.Id;
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = _cacheService.Get($"db_user_{id}");
+            if (user != null)
+            {
+                Console.WriteLine(user.FirstName);
+                resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = user, IsSuccess = true });
+                return resault;
+            }
+            
+            user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
                 resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Value = null, IsSuccess = false }); 
@@ -67,7 +75,7 @@ namespace OOP2.Application.Users.User
                 return resault;
 
             await _userRepository.InsertAsync(user);
-            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Id = user.Id });
+            resault.setValue(new SuccessResponse<Domain.Entities.User.User> { Id = user.Id , IsSuccess=true, Value = user});
 
             return resault;
         }
