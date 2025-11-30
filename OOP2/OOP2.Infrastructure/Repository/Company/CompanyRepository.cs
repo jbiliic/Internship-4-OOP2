@@ -33,7 +33,14 @@ namespace OOP2.Infrastructure.Repository.Company
         }
         public async Task<IReadOnlyList<Domain.Entities.Company.Company>> GetAllCompaniesAsync()
         {
-            var sql = "SELECT * FROM companies";
+            var sql = @"
+        SELECT 
+            id,
+            name,
+            created_at AS CreatedAt,
+            updated_at AS UpdatedAt
+        FROM companies;
+    "; ;
             return await _manager.QueryGetAllAsync<Domain.Entities.Company.Company>(sql);
         }
     }
