@@ -32,7 +32,7 @@ namespace OOP2.API.Controllers
             var res = await _handler.ExecuteGetAsync(new CreateUserRequest { Id = id });
 
             
-            if (res.Value == null || res.hasErrors)
+            if (res.Value.IsSuccess == false)
                 return BadRequest(res);
 
             return Ok(res.Value);

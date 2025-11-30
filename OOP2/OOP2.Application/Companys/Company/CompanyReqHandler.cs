@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OOP2.Application.Common.Model;
-using OOP2.Application.Users.User;
+﻿using OOP2.Application.Common.Model;
 using OOP2.Domain.Repository.Company;
 using OOP2.Domain.Repository.User;
 using OOP2.Domain.Services.Cache;
-
 namespace OOP2.Application.Companys.Company
 {
     public class CompanyReqHandler : RequestHandler<CreateCompanyReq, SuccessResponse<Domain.Entities.Company.Company>>
